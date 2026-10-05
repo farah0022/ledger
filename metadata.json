@@ -1,0 +1,6 @@
+{
+  "name": "Records Money Time",
+  "description": "A quiet, precise business utility for keeping track of records, understanding money, and scheduling time.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
