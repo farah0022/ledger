@@ -2,6 +2,7 @@
   "name": "records-money-time",
   "productName": "Records Money Time",
   "description": "A quiet, precise business utility for keeping track of records, understanding money, and scheduling time.",
+  "author": "Records Money Time",
   "private": true,
   "version": "1.0.0",
   "main": "electron/main.cjs",
@@ -38,7 +39,8 @@
     "mac": {
       "target": ["dmg", "zip"],
       "category": "public.app-category.finance",
-      "icon": "public/pwa-512x512.png"
+      "icon": "public/pwa-512x512.png",
+      "identity": null
     },
     "linux": {
       "target": ["AppImage", "deb"],
