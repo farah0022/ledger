@@ -6,6 +6,18 @@ Built for independent businesses, freelancers, and operators who value privacy, 
 
 ---
 
+## 📥 Download Desktop Apps (Windows, macOS, Linux)
+
+Prebuilt binaries and desktop packages are automatically built and published via GitHub Releases:
+
+- 🪟 **[Download for Windows (.exe)](https://github.com/farah0022/ledger/releases/latest)**
+- 🍏 **[Download for macOS (.dmg)](https://github.com/farah0022/ledger/releases/latest)**
+- 🐧 **[Download for Linux (.AppImage / .deb)](https://github.com/farah0022/ledger/releases/latest)**
+
+👉 Browse all versions and asset downloads on the **[Releases Page](https://github.com/farah0022/ledger/releases)**.
+
+---
+
 ## 🌟 Key Capabilities
 
 - **100% Local-First Storage**: All records and settings are stored directly on your machine in a private JSON vault (`./data/business-ledger.json`). Zero external tracking, zero cloud lock-in.
