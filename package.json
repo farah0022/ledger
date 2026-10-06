@@ -25,7 +25,8 @@
     "appId": "com.recordsmoneytime.app",
     "productName": "Records Money Time",
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "build"
     },
     "files": [
       "dist/**/*",
@@ -33,19 +34,16 @@
       "package.json"
     ],
     "win": {
-      "target": ["nsis", "portable"],
-      "icon": "public/pwa-512x512.png"
+      "target": ["nsis", "portable"]
     },
     "mac": {
       "target": ["dmg", "zip"],
       "category": "public.app-category.finance",
-      "icon": "public/pwa-512x512.png",
       "identity": null
     },
     "linux": {
       "target": ["AppImage", "deb"],
-      "category": "Finance",
-      "icon": "public/pwa-512x512.png"
+      "category": "Finance"
     }
   },
   "dependencies": {

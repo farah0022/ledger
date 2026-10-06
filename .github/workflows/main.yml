@@ -3,14 +3,14 @@ name: Build and Release Desktop App
 on:
   push:
     tags:
-      - 'v*' # Triggers workflow when you push a tag like v1.0.0
-  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+      - 'v*' # Triggers on git tags like v1.0.0
+  workflow_dispatch: # Allows manual trigger directly from GitHub Actions tab
 
 permissions:
   contents: write
 
 jobs:
-  release:
+  build:
     name: Build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
@@ -26,53 +26,65 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
 
       - name: Install Dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
       - name: Build Web Application
         run: npm run build
 
-      - name: Build Windows Desktop App
+      - name: Package Windows Binary
         if: matrix.os == 'windows-latest'
-        run: npx electron-builder --win
+        run: npx electron-builder --win --publish never
 
-      - name: Build macOS Desktop App
+      - name: Package macOS Binary
         if: matrix.os == 'macos-latest'
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
-        run: npx electron-builder --mac
+        run: npx electron-builder --mac --publish never
 
-      - name: Build Linux Desktop App
+      - name: Package Linux Binary
         if: matrix.os == 'ubuntu-latest'
-        run: npx electron-builder --linux
+        run: npx electron-builder --linux --publish never
 
-      - name: Upload Artifacts to Actions
+      - name: Upload Desktop Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: desktop-app-${{ matrix.os }}
+          name: release-${{ matrix.os }}
           path: |
             release/*.exe
             release/*.dmg
             release/*.zip
             release/*.AppImage
             release/*.deb
-          if-no-files-found: warn
+          if-no-files-found: error
 
-      - name: Publish to GitHub Releases
+  publish:
+    name: Publish to GitHub Releases
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all compiled binaries
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          path: dist-release
+          merge-multiple: true
+
+      - name: List Release Files
+        run: ls -lh dist-release/
+
+      - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'latest' }}
-          name: ${{ github.ref_type == 'tag' && github.ref_name || 'Records Money Time Desktop (Latest)' }}
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.0' }}
+          name: ${{ github.ref_type == 'tag' && github.ref_name || 'Records Money Time Desktop v1.0.0' }}
+          files: dist-release/*
           draft: false
           prerelease: false
-          files: |
-            release/*.exe
-            release/*.dmg
-            release/*.zip
-            release/*.AppImage
-            release/*.deb
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
