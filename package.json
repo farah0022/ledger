@@ -2,7 +2,10 @@
   "name": "records-money-time",
   "productName": "Records Money Time",
   "description": "A quiet, precise business utility for keeping track of records, understanding money, and scheduling time.",
-  "author": "Records Money Time",
+  "author": {
+    "name": "Records Money Time",
+    "email": "mememaker0011@gmail.com"
+  },
   "private": true,
   "version": "1.0.0",
   "main": "electron/main.cjs",
