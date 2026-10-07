@@ -111,12 +111,17 @@ function createSolidPNG(width, height, r, g, b, a = 255) {
 if (!fs.existsSync('./public')) {
   fs.mkdirSync('./public', { recursive: true });
 }
+if (!fs.existsSync('./build')) {
+  fs.mkdirSync('./build', { recursive: true });
+}
 
 // Generate PWA Icons
+const pwa512 = createSolidPNG(512, 512);
 fs.writeFileSync('./public/pwa-192x192.png', createSolidPNG(192, 192));
-fs.writeFileSync('./public/pwa-512x512.png', createSolidPNG(512, 512));
-fs.writeFileSync('./public/pwa-maskable-512x512.png', createSolidPNG(512, 512));
+fs.writeFileSync('./public/pwa-512x512.png', pwa512);
+fs.writeFileSync('./public/pwa-maskable-512x512.png', pwa512);
 fs.writeFileSync('./public/apple-touch-icon.png', createSolidPNG(180, 180));
+fs.writeFileSync('./build/icon.png', pwa512);
 
 // Generate SVG Icon
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">

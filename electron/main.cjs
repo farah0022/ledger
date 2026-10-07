@@ -1,17 +1,49 @@
 const { app, BrowserWindow, shell, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
+
 const isDev = process.env.NODE_ENV !== 'production' && !app.isPackaged;
 
 let mainWindow = null;
 
+function resolveAppIcon() {
+  const candidates = [
+    path.join(__dirname, '../build/icon.png'),
+    path.join(__dirname, '../dist/pwa-512x512.png'),
+    path.join(__dirname, '../public/pwa-512x512.png'),
+    path.join(app.getAppPath(), 'build/icon.png'),
+    path.join(app.getAppPath(), 'dist/pwa-512x512.png'),
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c)) return c;
+  }
+  return undefined;
+}
+
+function resolveIndexHtml() {
+  const candidates = [
+    path.join(__dirname, '../dist/index.html'),
+    path.join(app.getAppPath(), 'dist/index.html'),
+    path.join(process.resourcesPath, 'app/dist/index.html'),
+    path.join(process.resourcesPath, 'dist/index.html'),
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c)) return c;
+  }
+  return path.join(__dirname, '../dist/index.html');
+}
+
 function createWindow() {
+  const appIcon = resolveAppIcon();
+
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 820,
     minWidth: 960,
     minHeight: 640,
     title: 'Records Money Time - Business Ledger',
-    backgroundColor: '#FAF9F7',
+    icon: appIcon,
+    backgroundColor: '#FBFBFA',
     show: false,
     autoHideMenuBar: true,
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
@@ -23,7 +55,7 @@ function createWindow() {
     },
   });
 
-  const localFile = path.join(__dirname, '../dist/index.html');
+  const localFile = resolveIndexHtml();
   const targetUrl = process.env.ELECTRON_START_URL;
 
   if (targetUrl) {
@@ -35,12 +67,28 @@ function createWindow() {
       mainWindow.loadFile(localFile);
     });
   } else {
-    mainWindow.loadFile(localFile);
+    mainWindow.loadFile(localFile).catch((err) => {
+      console.error('Failed to load local HTML file:', err);
+    });
   }
 
+  // Gracefully show window when ready, with fallback timeout
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });
+
+  setTimeout(() => {
+    if (mainWindow && !mainWindow.isVisible()) {
+      mainWindow.show();
+    }
+  }, 1000);
+
+  // Set dock icon on macOS if available
+  if (process.platform === 'darwin' && app.dock && appIcon) {
+    try {
+      app.dock.setIcon(appIcon);
+    } catch {}
+  }
 
   // Open external links in default system browser
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {

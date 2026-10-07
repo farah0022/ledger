@@ -7,7 +7,7 @@
     "email": "mememaker0011@gmail.com"
   },
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
@@ -34,6 +34,8 @@
     "files": [
       "dist/**/*",
       "electron/**/*",
+      "build/**/*",
+      "public/**/*",
       "package.json"
     ],
     "win": {
