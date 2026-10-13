@@ -3,13 +3,21 @@
 @layer base {
   html {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    letter-spacing: -0.011em;
+    letter-spacing: -0.012em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+  }
+}
+
+.texture-card {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.015) 1px, transparent 1px);
+  background-size: 16px 16px;
 }
 
 /* Utility to completely remove scrollbars */

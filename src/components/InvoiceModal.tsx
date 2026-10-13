@@ -19,7 +19,7 @@ import {
 import { BusinessRecord, BusinessSettings } from '../types';
 import { formatMoney, formatDisplayDate, getTodayStr } from '../utils/formatters';
 import { generateInvoicePDF, InvoiceItem, InvoiceData } from '../utils/pdfInvoiceGenerator';
-import { BrandLogo } from './BrandLogo';
+import { saveSettings } from '../utils/storage';
 
 interface InvoiceModalProps {
   isOpen: boolean;
@@ -76,7 +76,7 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
   );
   const [enableNotes, setEnableNotes] = useState<boolean>(Boolean(settings.invoiceNotes));
   const [notes, setNotes] = useState<string>(settings.invoiceNotes || 'Thank you for your prompt business.');
-  const [terms, setTerms] = useState<string>('Payment is requested within the indicated term. Inquiries regarding this invoice should be directed to the billing contact above.');
+  const [terms, setTerms] = useState<string>('Payment is due in accordance with the agreed payment terms.');
   const [enableSignature, setEnableSignature] = useState<boolean>(false);
   const [signatoryName, setSignatoryName] = useState<string>(settings.businessName || '');
 
@@ -514,29 +514,16 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
           >
             {/* Header: Business & Invoice Details */}
             <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-slate-200">
-              <div className="flex items-start gap-3.5">
-                {settings.businessLogo && settings.businessLogo.trim() && (
-                  <BrandLogo
-                    logoUrl={settings.businessLogo}
-                    businessName={settings.businessName}
-                    size="lg"
-                    className="shrink-0 mt-0.5"
-                    badgeClassName="shadow-none border-slate-200"
-                  />
+              <div className="flex flex-col items-start min-w-0">
+                {settings.businessName?.trim() && (
+                  <h3 className="font-semibold text-base text-slate-900 tracking-tight">
+                    {settings.businessName.trim()}
+                  </h3>
                 )}
-                {(settings.businessName?.trim() || settings.contactInfo?.trim()) ? (
-                  <div>
-                    {settings.businessName?.trim() && (
-                      <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-                        {settings.businessName.trim()}
-                      </h1>
-                    )}
-                    {settings.contactInfo?.trim() && (
-                      <p className="text-xs text-slate-500 mt-1 whitespace-pre-line leading-relaxed">
-                        {settings.contactInfo.trim()}
-                      </p>
-                    )}
-                  </div>
+                {settings.contactInfo?.trim() ? (
+                  <p className="text-xs text-slate-500 mt-1 whitespace-pre-line leading-relaxed">
+                    {settings.contactInfo.trim()}
+                  </p>
                 ) : null}
               </div>
 

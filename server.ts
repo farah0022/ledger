@@ -3,7 +3,19 @@ import path from 'path';
 import fs from 'fs';
 
 const app = express();
-const PORT = Number(process.env.PORT) || 3000;
+
+function getPort(): number {
+  const portArgIdx = process.argv.indexOf('--port');
+  if (portArgIdx !== -1 && process.argv[portArgIdx + 1]) {
+    return Number(process.argv[portArgIdx + 1]);
+  }
+  const isProduction = process.env.NODE_ENV === 'production' || process.argv.includes('--production');
+  if (isProduction && process.env.PORT) {
+    return Number(process.env.PORT);
+  }
+  return 3000;
+}
+const PORT = getPort();
 
 // Increase payload limit for receipt images and backups
 app.use(express.json({ limit: '15mb' }));

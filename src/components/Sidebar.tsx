@@ -54,45 +54,35 @@ export const Sidebar: React.FC<SidebarProps> = ({
       style={{ width: isCollapsed ? 68 : 220 }}
       className="hidden md:flex flex-col border-r border-neutral-200/80 bg-white h-screen sticky top-0 z-20 select-none overflow-hidden transition-[width] duration-150 ease-out"
     >
-      {/* Top Area - Brand Logo (only if configured in settings) & Collapse Button */}
-      <div className={`h-14 flex items-center px-3 border-b border-neutral-100 shrink-0 ${
-        isCollapsed && !hasBrand ? 'justify-center' : 'justify-between'
+      {/* Top Area - Brand Logo (No text name) & Collapse Button */}
+      <div className={`h-14 flex items-center px-3.5 border-b border-neutral-100 shrink-0 ${
+        isCollapsed ? 'justify-center' : 'justify-between'
       }`}>
-        {!isCollapsed ? (
-          hasBrand ? (
-            <BrandLogo
-              logoUrl={settings.businessLogo}
-              businessName={settings.businessName}
-              size="sm"
-              variant="compact"
-              className="truncate max-w-[145px]"
-            />
-          ) : (
-            <div className="text-xs font-semibold text-neutral-800 tracking-tight pl-1 select-none">
-              Records Money Time
-            </div>
-          )
-        ) : (
-          hasBrand ? (
-            <div className="mx-auto">
-              <BrandLogo
-                logoUrl={settings.businessLogo}
-                businessName={settings.businessName}
-                size="xs"
-                variant="icon"
-              />
-            </div>
-          ) : null
+        <BrandLogo
+          size={isCollapsed ? 'xs' : 'sm'}
+        />
+        {!isCollapsed && (
+          <button
+            id="toggle-collapse-btn"
+            onClick={onToggleCollapse}
+            className="p-1.5 rounded-lg hover:bg-neutral-100 text-neutral-400 hover:text-neutral-700 transition-colors cursor-pointer shrink-0"
+            title="Collapse sidebar"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
         )}
-        <button
-          id="toggle-collapse-btn"
-          onClick={onToggleCollapse}
-          className="p-1.5 rounded-lg hover:bg-neutral-100 text-neutral-400 hover:text-neutral-700 transition-colors cursor-pointer shrink-0"
-          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-        </button>
       </div>
+      {isCollapsed && (
+        <div className="px-3 pt-2 flex justify-center">
+          <button
+            onClick={onToggleCollapse}
+            className="p-1 rounded-md hover:bg-neutral-100 text-neutral-400 hover:text-neutral-700 transition-colors cursor-pointer"
+            title="Expand sidebar"
+          >
+            <ChevronRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Primary Action Button */}
       <div className="p-3 shrink-0">

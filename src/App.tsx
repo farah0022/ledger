@@ -218,16 +218,13 @@ export default function App() {
         {/* Clean, Understated Top Bar */}
         <header className="h-14 border-b border-neutral-200/80 bg-white px-4 sm:px-6 flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center gap-3 min-w-0">
-            {/* If user uploaded logo or set business name, display it with executive BrandLogo; otherwise remain completely blank */}
-            {hasBrand ? (
+            <div className="md:hidden">
               <BrandLogo 
-                logoUrl={settings.businessLogo} 
-                businessName={settings.businessName}
                 size="sm"
                 variant="compact"
-                className="max-w-[240px]"
+                className="max-w-[200px]"
               />
-            ) : null}
+            </div>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-2.5 ml-auto">

@@ -1,5 +1,4 @@
 import { jsPDF } from 'jspdf';
-import { BusinessSettings } from '../types';
 
 export interface InvoiceItem {
   id: string;
@@ -72,78 +71,33 @@ export function generateInvoicePDF(data: InvoiceData): jsPDF {
   const borderColor = [226, 232, 240]; // slate-200
   const headerBgColor = [248, 250, 252]; // slate-50
 
-  // 1. Top Bar / Document Header
+  // 1. Top Bar / Document Header (No logo)
   const contactLines = data.contactInfo && data.contactInfo.trim()
     ? data.contactInfo.trim().split('\n')
     : [];
 
   let leftY = y;
-  const hasLogo = data.businessLogo && typeof data.businessLogo === 'string' && data.businessLogo.startsWith('data:image');
-  const hasName = !!(data.businessName && data.businessName.trim());
-  const cleanBusinessName = hasName ? data.businessName.trim() : '';
 
-  if (hasLogo) {
-    try {
-      const isPng = (data.businessLogo as string).includes('image/png');
-      doc.addImage(data.businessLogo as string, isPng ? 'PNG' : 'JPEG', margin, y - 6, 12, 12);
-      
-      if (hasName) {
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(18);
-        doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-        doc.text(cleanBusinessName, margin + 15, y);
-      }
-
-      leftY = y + 5;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8.5);
-      doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
-      contactLines.slice(0, 3).forEach((line) => {
-        doc.text(line.trim(), margin + (hasName ? 15 : 0), leftY);
-        leftY += 4;
-      });
-    } catch {
-      if (hasName) {
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(22);
-        doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-        doc.text(cleanBusinessName, margin, y);
-      }
-
-      leftY = y + 7;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
-      contactLines.slice(0, 3).forEach((line) => {
-        doc.text(line.trim(), margin, leftY);
-        leftY += 4.5;
-      });
-    }
-  } else if (hasName) {
+  if (data.businessName && data.businessName.trim()) {
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(22);
+    doc.setFontSize(14);
     doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-    doc.text(cleanBusinessName, margin, y);
+    doc.text(data.businessName.trim(), margin, leftY);
+    leftY += 5.5;
+  }
 
-    leftY = y + 7;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
-    contactLines.slice(0, 3).forEach((line) => {
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8.5);
+  doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+  if (contactLines.length > 0) {
+    contactLines.slice(0, 4).forEach((line) => {
       doc.text(line.trim(), margin, leftY);
-      leftY += 4.5;
-    });
-  } else if (contactLines.length > 0) {
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
-    contactLines.slice(0, 3).forEach((line) => {
-      doc.text(line.trim(), margin, leftY);
-      leftY += 4.5;
+      leftY += 4;
     });
   }
 
   // INVOICE on top right
+  doc.setFont('helvetica', 'bold');
   doc.setFontSize(22);
   doc.setTextColor(accentColor[0], accentColor[1], accentColor[2]);
   doc.text('INVOICE', pageWidth - margin, y, { align: 'right' });
@@ -151,9 +105,9 @@ export function generateInvoicePDF(data: InvoiceData): jsPDF {
   y += 7;
 
   // Invoice Details (right)
-
   let rightY = y;
   doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
   doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
   doc.text(`Invoice #: `, pageWidth - margin - 35, rightY);
   doc.setFont('helvetica', 'normal');
