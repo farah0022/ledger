@@ -1,6 +1,12 @@
+process.env.DISABLE_HMR = 'true';
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
+
+// Fix for tsx context where __dirname is '.' causing createRequire in Vite plugins to fail
+if (typeof __dirname === 'string' && __dirname === '.') {
+  (globalThis as any).__dirname = path.resolve(process.cwd(), 'server.ts');
+}
 
 const app = express();
 
@@ -500,6 +506,7 @@ async function startServer() {
         server: {
           middlewareMode: true,
           hmr: false,
+          ws: false,
         },
         appType: 'spa',
       });

@@ -7,7 +7,7 @@
     "email": "mememaker0011@gmail.com"
   },
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
@@ -39,16 +39,27 @@
       "package.json"
     ],
     "win": {
-      "target": ["nsis", "portable"]
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowElevation": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true,
+      "artifactName": "${productName}-${version}.${ext}"
     },
     "mac": {
-      "target": ["dmg", "zip"],
+      "target": "dmg",
       "category": "public.app-category.finance",
-      "identity": null
+      "identity": null,
+      "artifactName": "${productName}-${version}.${ext}"
     },
     "linux": {
-      "target": ["AppImage", "deb"],
-      "category": "Finance"
+      "target": "AppImage",
+      "category": "Finance",
+      "artifactName": "${productName}-${version}.${ext}"
     }
   },
   "dependencies": {
